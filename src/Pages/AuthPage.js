@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { ADMIN_CREDENTIALS } from "../Data/InitialData";
-import { genId, today } from "../Utils/Helper";
+import {  today } from "../Utils/Helper";
 import { loginUser, registerUser } from "../firebase/config";
 
 const AuthPage = ({ onLogin, students = [], onRegister }) => {  // ✅ Default value []

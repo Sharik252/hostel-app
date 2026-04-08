@@ -3,7 +3,7 @@ const AdminDashboard = ({ rooms = [], students = [] }) => {
   const totalStudents = students?.length || 0;
   const totalRooms = rooms?.length || 0;
   const occupiedRooms = rooms?.filter(room => (room?.occupants?.length || 0) > 0).length || 0;
-  const availableRooms = totalRooms - occupiedRooms;
+  
   const availableSeats = rooms?.reduce((total, room) => {
     return total + ((room?.capacity || 0) - (room?.occupants?.length || 0));
   }, 0) || 0;
