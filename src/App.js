@@ -22,20 +22,20 @@ function App() {
   useEffect(() => {
     const loadData = async () => {
       setLoading(true);
-      
+
       const studentsResult = await getStudents();
       if (studentsResult.success) {
         setStudents(studentsResult.data);
       }
-      
+
       const roomsResult = await getRooms();
       if (roomsResult.success) {
         setRooms(roomsResult.data);
       }
-      
+
       setLoading(false);
     };
-    
+
     loadData();
   }, []);
 
@@ -145,16 +145,16 @@ function App() {
 
       <div style={{ flex: 1, padding: 32, overflowY: "auto" }}>
         {currentPage === "dashboard" && isAdmin && <AdminDashboard rooms={rooms} students={students} />}
-        
+
         {currentPage === "students" && isAdmin && (
-          <StudentsPage 
-            students={students} 
-            onAssign={handleAssign} 
+          <StudentsPage
+            students={students}
+            onAssign={handleAssign}
             onRemove={handleRemoveStudent}
             onAddStudent={handleAddStudent}
           />
         )}
-        
+
         {currentPage === "rooms" && (
           <RoomsPage
             rooms={rooms}
@@ -169,13 +169,20 @@ function App() {
             }}
             onVacate={handleVacate}
             currentStudentId={user?.id}
+            onRoomAdded={async () => {
+              const { getRooms } = await import("./firebase/config");
+              const result = await getRooms();
+              if (result.success) {
+                setRooms(result.data);
+              }
+            }}
           />
         )}
-        
+
         {currentPage === "myroom" && !isAdmin && (
           <MyRoom student={currentStudent} rooms={rooms} students={students} />
         )}
-        
+
         {currentPage === "about" && <AboutPage />}
         {currentPage === "contact" && <ContactPage />}
       </div>
