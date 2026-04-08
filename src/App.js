@@ -87,14 +87,13 @@ function App() {
 
   // Student Navigation
   const studentNav = [
-    { id: "myroom", label: "My Room", icon: "home" },
-    { id: "rooms", label: "Browse Rooms", icon: "bed" },
-    { id: "notices", label: "Notices", icon: "bell" },
-    { id: "payments", label: "Payments", icon: "wallet" },
-    { id: "about", label: "About", icon: "info" },
-    { id: "contact", label: "Contact", icon: "mail" },
-  ];
-
+  { id: "myroom", label: "My Room", icon: "home" },
+  { id: "rooms", label: "Browse Rooms", icon: "bed" },
+  { id: "payments", label: "Payments", icon: "wallet" },
+  { id: "notices", label: "Notices", icon: "bell" },
+  { id: "about", label: "About", icon: "info" },
+  { id: "contact", label: "Contact", icon: "mail" },
+];
   if (loading) {
     return (
       <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh", fontSize: "18px" }}>
