@@ -7,6 +7,8 @@ import RoomsPage from "./Pages/RoomsPage";
 import MyRoom from "./Pages/MyRoom";
 import AboutPage from "./Pages/AboutPage";
 import ContactPage from "./Pages/ContactPage";
+import NoticeBoard from "./Pages/NoticeBoard";
+import Payments from "./Pages/Payments";
 import AssignModal from "./Modals/AssignModal";
 import Icon from "./components/ui/Icon";
 import Btn from "./components/ui/Btn";
@@ -72,17 +74,22 @@ function App() {
     setStudents(prev => [...prev, newStudent]);
   };
 
+  // ✅ Updated Admin Navigation with Notice Board
   const adminNav = [
     { id: "dashboard", label: "Dashboard", icon: "home" },
     { id: "students", label: "Students", icon: "users" },
     { id: "rooms", label: "Rooms", icon: "bed" },
+    { id: "notices", label: "Notices", icon: "bell" },
     { id: "about", label: "About", icon: "info" },
     { id: "contact", label: "Contact", icon: "mail" },
   ];
 
+  // ✅ Updated Student Navigation with Notice Board & Payments
   const studentNav = [
     { id: "myroom", label: "My Room", icon: "home" },
     { id: "rooms", label: "Browse Rooms", icon: "bed" },
+    { id: "notices", label: "Notices", icon: "bell" },
+    { id: "payments", label: "Payments", icon: "wallet" },
     { id: "about", label: "About", icon: "info" },
     { id: "contact", label: "Contact", icon: "mail" },
   ];
@@ -95,7 +102,6 @@ function App() {
     );
   }
 
-  // ✅ FIXED: AuthPage with all required props
   if (!user) {
     return (
       <AuthPage
@@ -114,6 +120,7 @@ function App() {
 
   return (
     <div style={{ display: "flex", minHeight: "100vh", background: "#f1f5f9" }}>
+      {/* Sidebar */}
       <div style={{ width: 260, background: "#0f172a", color: "#fff", minHeight: "100vh", display: "flex", flexDirection: "column" }}>
         <div style={{ padding: 24, borderBottom: "1px solid #1e293b" }}>
           <div style={{ fontSize: 22, fontWeight: 900 }}>🏨 My Hostel</div>
@@ -123,12 +130,25 @@ function App() {
         </div>
         <nav style={{ padding: "16px 0", flex: 1 }}>
           {navItems.map(item => (
-            <button key={item.id} onClick={() => setCurrentPage(item.id)} style={{
-              display: "flex", alignItems: "center", gap: 12, width: "100%", padding: "12px 24px",
-              background: currentPage === item.id ? "#1e293b" : "transparent", border: "none",
-              color: currentPage === item.id ? (isAdmin ? "#f59e0b" : "#60a5fa") : "#94a3b8",
-              cursor: "pointer", fontSize: 14, fontWeight: 500, textAlign: "left"
-            }}>
+            <button
+              key={item.id}
+              onClick={() => setCurrentPage(item.id)}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 12,
+                width: "100%",
+                padding: "12px 24px",
+                background: currentPage === item.id ? "#1e293b" : "transparent",
+                border: "none",
+                color: currentPage === item.id ? (isAdmin ? "#f59e0b" : "#60a5fa") : "#94a3b8",
+                cursor: "pointer",
+                fontSize: 14,
+                fontWeight: 500,
+                textAlign: "left",
+                transition: "all 0.2s"
+              }}
+            >
               <Icon name={item.icon} size={18} /> {item.label}
             </button>
           ))}
@@ -136,14 +156,19 @@ function App() {
         <div style={{ padding: "20px 24px", borderTop: "1px solid #1e293b" }}>
           <div style={{ fontSize: 13, fontWeight: 700, color: "#fff", marginBottom: 2 }}>{user.name}</div>
           <div style={{ fontSize: 11, color: "#64748b", marginBottom: 12 }}>{user.email}</div>
-          <Btn variant="ghost" onClick={() => { setUser(null); setCurrentPage("dashboard"); }}
-            style={{ padding: "7px 16px", fontSize: 12, width: "100%", justifyContent: "center" }}>
+          <Btn
+            variant="ghost"
+            onClick={() => { setUser(null); setCurrentPage("dashboard"); }}
+            style={{ padding: "7px 16px", fontSize: 12, width: "100%", justifyContent: "center" }}
+          >
             <Icon name="logout" size={14} /> Logout
           </Btn>
         </div>
       </div>
 
+      {/* Main Content */}
       <div style={{ flex: 1, padding: 32, overflowY: "auto" }}>
+        {/* Admin Pages */}
         {currentPage === "dashboard" && isAdmin && <AdminDashboard rooms={rooms} students={students} />}
 
         {currentPage === "students" && isAdmin && (
@@ -154,6 +179,12 @@ function App() {
             onAddStudent={handleAddStudent}
           />
         )}
+
+        {/* ✅ Notice Board - Admin & Student both can view */}
+        {currentPage === "notices" && <NoticeBoard isAdmin={isAdmin} />}
+
+        {/* ✅ Payments - Only Student */}
+        {currentPage === "payments" && !isAdmin && <Payments student={currentStudent} />}
 
         {currentPage === "rooms" && (
           <RoomsPage
