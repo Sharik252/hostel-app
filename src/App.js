@@ -74,17 +74,18 @@ function App() {
     setStudents(prev => [...prev, newStudent]);
   };
 
-  // ✅ Updated Admin Navigation with Notice Board
+  // Admin Navigation
   const adminNav = [
     { id: "dashboard", label: "Dashboard", icon: "home" },
     { id: "students", label: "Students", icon: "users" },
     { id: "rooms", label: "Rooms", icon: "bed" },
+    { id: "payments", label: "Payments", icon: "wallet" },
     { id: "notices", label: "Notices", icon: "bell" },
     { id: "about", label: "About", icon: "info" },
     { id: "contact", label: "Contact", icon: "mail" },
   ];
 
-  // ✅ Updated Student Navigation with Notice Board & Payments
+  // Student Navigation
   const studentNav = [
     { id: "myroom", label: "My Room", icon: "home" },
     { id: "rooms", label: "Browse Rooms", icon: "bed" },
@@ -180,12 +181,18 @@ function App() {
           />
         )}
 
-        {/* ✅ Notice Board - Admin & Student both can view */}
+        {/* Payments - Both Admin and Student */}
+        {currentPage === "payments" && isAdmin && (
+          <Payments student={currentStudent} isAdmin={true} />
+        )}
+        {currentPage === "payments" && !isAdmin && (
+          <Payments student={currentStudent} isAdmin={false} />
+        )}
+
+        {/* Notice Board */}
         {currentPage === "notices" && <NoticeBoard isAdmin={isAdmin} />}
 
-        {/* ✅ Payments - Only Student */}
-        {currentPage === "payments" && !isAdmin && <Payments student={currentStudent} />}
-
+        {/* Rooms Page with Payment Redirect */}
         {currentPage === "rooms" && (
           <RoomsPage
             rooms={rooms}
@@ -200,12 +207,18 @@ function App() {
             }}
             onVacate={handleVacate}
             currentStudentId={user?.id}
+            currentStudentName={currentStudent?.name}
             onRoomAdded={async () => {
               const { getRooms } = await import("./firebase/config");
               const result = await getRooms();
               if (result.success) {
                 setRooms(result.data);
               }
+            }}
+            onPaymentRedirect={(roomData) => {
+              // Store selected room data and redirect to payments page
+              sessionStorage.setItem("selectedRoom", JSON.stringify(roomData));
+              setCurrentPage("payments");
             }}
           />
         )}
